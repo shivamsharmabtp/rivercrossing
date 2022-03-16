@@ -18,7 +18,7 @@ public class GameObject {
         return label;
     }
 
-    public Location getItemLocation() {
+    public Location getLocation() {
         return location;
     }
 

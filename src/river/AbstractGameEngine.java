@@ -20,7 +20,7 @@ public abstract class AbstractGameEngine implements GameEngine{
 
     @Override
     public Location getItemLocation(Item item) {
-        return gameObjects.get(item).getItemLocation();
+        return gameObjects.get(item).getLocation();
     }
 
     @Override
@@ -39,22 +39,24 @@ public abstract class AbstractGameEngine implements GameEngine{
 
     @Override
     public void loadBoat(Item item){
-        if (gameObjects.get(item).getItemLocation() == boatLocation) {
+        if (gameObjects.get(item).getLocation() == boatLocation) {
             // check if someone already on Boat
             int passengersAboard = 0;
             for(Item itm : Item.values()){
-                if(itm != item && gameObjects.get(itm).getItemLocation() == Location.BOAT){
+                if (!(itm.ordinal() < numberOfItems())) break;
+                if(itm != item && gameObjects.get(itm).getLocation() == Location.BOAT){
                     passengersAboard++;
                 }
             }
-            if(passengersAboard < 2)
+            if(passengersAboard < 2){
                 gameObjects.get(item).setLocation(Location.BOAT);
+            }
         }
     }
 
     @Override
     public void unloadBoat(Item item) {
-        if (gameObjects.get(item).getItemLocation() == Location.BOAT) {
+        if (gameObjects.get(item).getLocation() == Location.BOAT) {
             gameObjects.get(item).setLocation(boatLocation);
         }
     }
@@ -62,7 +64,7 @@ public abstract class AbstractGameEngine implements GameEngine{
     public void rowBoat() {
         Boolean anyoneOnBoat = false;
         for(Item item : Item.values()){
-            if(gameObjects.get(item).getItemLocation() == Location.BOAT){
+            if(gameObjects.get(item).getLocation() == Location.BOAT){
                 anyoneOnBoat = true;
                 break;
             }
@@ -73,11 +75,13 @@ public abstract class AbstractGameEngine implements GameEngine{
 
     @Override
     public boolean gameIsWon() {
-        return gameObjects.values().stream().allMatch(x -> x.getItemLocation() == Location.FINISH);
+        return gameObjects.values().stream().allMatch(x -> x.getLocation() == Location.FINISH);
     }
 
     @Override
-    public abstract boolean gameIsLost();
+    public boolean gameIsLost(){
+        return false;
+    };
 
     @Override
     public void resetGame() {
